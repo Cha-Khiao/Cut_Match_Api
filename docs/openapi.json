@@ -7,8 +7,7 @@
   },
   "servers": [
     {
-      "url": "https://vpbsnsjojjpzyptbjjfe.supabase.co",
-      "description": "Supabase Production URL (Replace [vpbsnsjojjpzyptbjjfe] with your actual ID)"
+      "url": "https://vpbsnsjojjpzyptbjjfe.supabase.co"
     }
   ],
   "components": {
