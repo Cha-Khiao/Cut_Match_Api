@@ -14,7 +14,7 @@ This repository contains the schema, security policies, and documentation for th
 
 ## API Documentation 🚀
 The interactive API documentation is hosted via GitHub Pages and can be accessed here:
-**[[YOUR-LINK-HERE](https://cha-khiao.github.io/Cut_Match_Api/)]**
+**[[Cut-Match-Api](https://cha-khiao.github.io/Cut_Match_Api/)]**
 
 ## Live Project
 This repository represents the configuration for our live Supabase project. The actual backend service is running on the Supabase platform.

@@ -1,9 +1,9 @@
 {
   "openapi": "3.0.3",
   "info": {
-    "title": "Cut Match API",
+    "title": "Cut Match API (ลุคชัด-ตัดเลย)",
     "version": "1.0.0",
-    "description": "API Specification for the Cut Match application, featuring hairstyles, user profiles, and favorites. Built on Supabase."
+    "description": "เอกสาร API สำหรับแอปพลิเคชัน Cut Match ประกอบด้วยระบบจัดการทรงผม, โปรไฟล์ผู้ใช้, และรายการโปรด สร้างขึ้นบนแพลตฟอร์ม Supabase"
   },
   "servers": [
     {
@@ -16,56 +16,119 @@
         "type": "http",
         "scheme": "bearer",
         "bearerFormat": "JWT",
-        "description": "Supabase JWT for authenticated users."
+        "description": "JWT Token ของผู้ใช้ที่ได้มาจากการล็อกอิน เพื่อยืนยันตัวตน"
       },
       "apiKeyAuth": {
         "type": "apiKey",
         "in": "header",
         "name": "apikey",
-        "description": "Supabase anonymous public key."
+        "description": "Public Key (anon key) ของโปรเจกต์ Supabase สำหรับการเข้าถึงข้อมูลสาธารณะ"
       }
     },
     "schemas": {
       "Hairstyle": {
         "type": "object",
+        "description": "ข้อมูลเกี่ยวกับทรงผมแต่ละทรง",
         "properties": {
-          "id": { "type": "string", "format": "uuid" },
-          "created_at": { "type": "string", "format": "date-time" },
-          "name": { "type": "string" },
-          "description": { "type": "string" },
-          "image_url": { "type": "string", "format": "uri" },
-          "ar_asset_url": { "type": "string", "format": "uri" },
-          "category": { "type": "string" }
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "รหัสเฉพาะของทรงผม (UUID)"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "วันเวลาที่ข้อมูลถูกสร้าง"
+          },
+          "name": {
+            "type": "string",
+            "description": "ชื่อทรงผม เช่น ทรงคอมม่า, Two Block"
+          },
+          "description": {
+            "type": "string",
+            "description": "คำอธิบายรายละเอียดของทรงผม"
+          },
+          "image_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL ของรูปภาพตัวอย่างทรงผม"
+          },
+          "ar_asset_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL ของไฟล์ AR สำหรับการลองทรงผมแบบเรียลไทม์"
+          }
         },
         "required": ["id", "name"]
       },
       "Profile": {
         "type": "object",
+        "description": "ข้อมูลโปรไฟล์สาธารณะของผู้ใช้",
         "properties": {
-          "id": { "type": "string", "format": "uuid", "description": "Matches auth.users.id" },
-          "updated_at": { "type": "string", "format": "date-time" },
-          "username": { "type": "string" },
-          "full_name": { "type": "string" },
-          "avatar_url": { "type": "string", "format": "uri" }
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "รหัสเฉพาะของผู้ใช้ (ต้องตรงกับ auth.users.id)"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "วันเวลาล่าสุดที่มีการแก้ไขโปรไฟล์"
+          },
+          "username": {
+            "type": "string",
+            "description": "ชื่อผู้ใช้ในระบบ (ต้องไม่ซ้ำกัน)"
+          },
+          "full_name": {
+            "type": "string",
+            "description": "ชื่อ-นามสกุลจริงของผู้ใช้"
+          },
+          "avatar_url": {
+            "type": "string",
+            "format": "uri",
+            "description": "URL ของรูปโปรไฟล์"
+          }
         },
         "required": ["id"]
       },
       "Favorite": {
         "type": "object",
-        "description": "Represents a user's favorite hairstyle.",
+        "description": "ข้อมูลการกดถูกใจทรงผมของผู้ใช้ ซึ่งเป็นการเชื่อมโยงระหว่างผู้ใช้กับทรงผม",
         "properties": {
-          "user_id": { "type": "string", "format": "uuid" },
-          "hairstyle_id": { "type": "string", "format": "uuid" },
-          "created_at": { "type": "string", "format": "date-time" }
+          "user_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "รหัสของผู้ใช้ที่กดถูกใจ (จากตาราง profiles)"
+          },
+          "hairstyle_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "รหัสของทรงผมที่ถูกถูกใจ (จากตาราง hairstyles)"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "วันเวลาที่กดถูกใจ"
+          }
         },
         "required": ["user_id", "hairstyle_id"]
       },
       "Error": {
         "type": "object",
+        "description": "โครงสร้างข้อมูลเมื่อเกิดข้อผิดพลาดจากฝั่งเซิร์ฟเวอร์",
         "properties": {
-          "message": { "type": "string" },
-          "code": { "type": "string" },
-          "hint": { "type": "string" }
+          "message": {
+            "type": "string",
+            "description": "ข้อความอธิบายข้อผิดพลาด"
+          },
+          "code": {
+            "type": "string",
+            "description": "โค้ดของข้อผิดพลาด"
+          },
+          "hint": {
+            "type": "string",
+            "description": "คำใบ้เพิ่มเติม (ถ้ามี)"
+          }
         }
       }
     }
@@ -73,20 +136,15 @@
   "paths": {
     "/rest/v1/hairstyles": {
       "get": {
-        "summary": "List all hairstyles",
-        "description": "Retrieves a list of all available hairstyles. This endpoint is public.",
-        "tags": ["Hairstyles"],
+        "summary": "เรียกดูทรงผมทั้งหมด",
+        "description": "ดึงข้อมูลทรงผมทั้งหมดที่มีอยู่ในระบบ Endpoint นี้เป็นสาธารณะ ทุกคนสามารถเรียกดูได้",
+        "tags": ["Hairstyles (ทรงผม)"],
         "security": [{ "apiKeyAuth": [] }],
         "responses": {
           "200": {
-            "description": "A list of hairstyles.",
+            "description": "ส่งข้อมูลทรงผมทั้งหมดกลับไปเป็น Array",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Hairstyle" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Hairstyle" } } }
             }
           }
         }
@@ -94,92 +152,78 @@
     },
     "/rest/v1/profiles": {
       "get": {
-        "summary": "List profiles",
-        "description": "Retrieves user profiles. Use query parameters to filter by id or username (e.g., ?id=eq.user-uuid).",
-        "tags": ["Profiles"],
+        "summary": "เรียกดูโปรไฟล์ผู้ใช้",
+        "description": "ดึงข้อมูลโปรไฟล์ของผู้ใช้ สามารถใช้ Query Parameter เพื่อกรองข้อมูลได้ เช่น `?id=eq.{uuid}` เพื่อค้นหาจาก ID ของผู้ใช้",
+        "tags": ["Profiles (โปรไฟล์)"],
         "security": [{ "apiKeyAuth": [], "bearerAuth": [] }],
         "responses": {
           "200": {
-            "description": "A list of profiles.",
+            "description": "ส่งข้อมูลโปรไฟล์ที่ค้นหาเจอ",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Profile" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Profile" } } }
             }
           }
         }
       },
       "patch": {
-        "summary": "Update a profile",
-        "description": "Updates the profile of the currently authenticated user. Must filter by user ID (e.g., ?id=eq.user-uuid).",
-        "tags": ["Profiles"],
+        "summary": "อัปเดตโปรไฟล์ของตัวเอง",
+        "description": "อัปเดตข้อมูลโปรไฟล์ (เช่น ชื่อ, รูปโปรไฟล์) ของผู้ใช้ที่ล็อกอินอยู่เท่านั้น โดยต้องระบุ ID ของผู้ใช้ใน Query Parameter (`?id=eq.{uuid}`)",
+        "tags": ["Profiles (โปรไฟล์)"],
         "security": [{ "apiKeyAuth": [], "bearerAuth": [] }],
         "requestBody": {
+          "description": "ข้อมูลที่ต้องการอัปเดต",
           "content": {
             "application/json": {
               "schema": {
                 "type": "object",
-                "properties": {
-                  "username": { "type": "string" },
-                  "full_name": { "type": "string" },
-                  "avatar_url": { "type": "string", "format": "uri" }
-                }
+                "properties": { "username": { "type": "string" }, "full_name": { "type": "string" }, "avatar_url": { "type": "string", "format": "uri" } }
               }
             }
           }
         },
         "responses": {
-          "204": { "description": "Profile updated successfully. No content." }
+          "204": { "description": "อัปเดตข้อมูลสำเร็จ (ไม่มีข้อมูลส่งกลับ)" }
         }
       }
     },
     "/rest/v1/favorites": {
       "get": {
-        "summary": "List user's favorites",
-        "description": "Retrieves the favorites for the currently authenticated user. Requires filtering by `user_id` (e.g. `?select=*&user_id=eq.current-user-id`).",
-        "tags": ["Favorites"],
+        "summary": "เรียกดูรายการโปรดของฉัน",
+        "description": "ดึงข้อมูลทรงผมที่ผู้ใช้ที่ล็อกอินอยู่ได้กดถูกใจไว้ จำเป็นต้องกรองข้อมูลด้วย `user_id` ของตนเอง (เช่น `?select=*&user_id=eq.{uuid}`)",
+        "tags": ["Favorites (รายการโปรด)"],
         "security": [{ "apiKeyAuth": [], "bearerAuth": [] }],
         "responses": {
           "200": {
-            "description": "A list of the user's favorite items.",
+            "description": "ส่งข้อมูลรายการโปรดทั้งหมดของผู้ใช้กลับไป",
             "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": { "$ref": "#/components/schemas/Favorite" }
-                }
-              }
+              "application/json": { "schema": { "type": "array", "items": { "$ref": "#/components/schemas/Favorite" } } }
             }
           }
         }
       },
       "post": {
-        "summary": "Add a new favorite",
-        "description": "Adds a hairstyle to the user's favorites list.",
-        "tags": ["Favorites"],
+        "summary": "เพิ่มรายการโปรดใหม่",
+        "description": "บันทึกทรงผมที่เลือกเป็นรายการโปรดของผู้ใช้ที่ล็อกอินอยู่",
+        "tags": ["Favorites (รายการโปรด)"],
         "security": [{ "apiKeyAuth": [], "bearerAuth": [] }],
         "requestBody": {
           "required": true,
+          "description": "ระบุ user_id และ hairstyle_id ที่ต้องการเพิ่ม",
           "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Favorite" }
-            }
+            "application/json": { "schema": { "$ref": "#/components/schemas/Favorite" } }
           }
         },
         "responses": {
-          "201": { "description": "Favorite created successfully." }
+          "201": { "description": "สร้างรายการโปรดสำเร็จ" }
         }
       },
       "delete": {
-        "summary": "Remove a favorite",
-        "description": "Removes a hairstyle from the user's favorites list. Requires filtering by `user_id` and `hairstyle_id`.",
-        "tags": ["Favorites"],
+        "summary": "ลบรายการโปรด",
+        "description": "ลบทรงผมออกจากรายการโปรดของผู้ใช้ที่ล็อกอินอยู่ โดยต้องระบุ `user_id` และ `hairstyle_id` ที่ต้องการลบใน Query Parameter",
+        "tags": ["Favorites (รายการโปรด)"],
         "security": [{ "apiKeyAuth": [], "bearerAuth": [] }],
         "responses": {
-          "204": { "description": "Favorite deleted successfully. No content." }
+          "204": { "description": "ลบรายการโปรดสำเร็จ (ไม่มีข้อมูลส่งกลับ)" }
         }
       }
     }
